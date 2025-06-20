@@ -1,11 +1,13 @@
 import express, { Application, NextFunction, Request, Response } from 'express';
 import { home } from './app/controllers/home.controller';
+import { booksRouter } from './app/routes/books.route';
 
 const app: Application = express()
 
 app.use( express.json() );
 
 app.get( "/", home );
+app.use( "/api/books", booksRouter );
 
 app.use((req: Request, res: Response, next: NextFunction) => {
     res.status(404).json({ message: "Route not found" })
