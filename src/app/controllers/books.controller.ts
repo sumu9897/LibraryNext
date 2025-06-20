@@ -124,3 +124,84 @@ export const getBookById = async ( req: Request, res: Response, next: NextFuncti
         // next(error);
     }
 };
+
+export const updateBook = async ( req: Request, res: Response, next: NextFunction ): Promise<void> =>
+{
+    try
+    {
+        const bookId = req.params?.id;
+        // console.log("updateBook controller called with ID:", bookId);
+        
+        const zodBooks = await zodBookSchema.parseAsync( req.body );
+        // console.log( "Validated Book Data for Update:", zodBooks );
+        
+        const book = await Books.findByIdAndUpdate( bookId, zodBooks, { new: true } );
+        if ( !book )
+        {
+            res.status( 404 ).json( {
+                success: false,
+                message: "Book not found",
+                data: null
+            } );
+
+            return;
+        }
+
+        res.status( 200 ).json( {
+            success: true,
+            message: "Book updated successfully",
+            data: book
+        } );
+    }
+    catch ( error )
+    {
+        // console.error( "Error in updateBook controller:", error );
+        
+        res.status( 500 ).json( {
+            message: "Internal Server Error",
+            success: false,
+            error: error instanceof Error ? error : "Unknown error",
+        });
+
+        // next(error);
+    }
+}   
+
+export const deleteBook = async ( req: Request, res: Response, next: NextFunction ): Promise<void> =>
+{
+    try
+    {
+        const bookId = req.params?.id;
+        // console.log("deleteBook controller called with ID:", bookId);
+        
+        const book = await Books.findByIdAndDelete( bookId );
+        if ( !book )
+        {
+            res.status( 404 ).json( {
+                success: false,
+                message: "Book not found",
+                data: null
+            } );
+
+            return;
+        }
+
+        res.status( 200 ).json( {
+            success: true,
+            message: "Book deleted successfully",
+            data: null
+        } );
+    }
+    catch ( error )
+    {
+        // console.error( "Error in deleteBook controller:", error );
+        
+        res.status( 500 ).json( {
+            message: "Internal Server Error",
+            success: false,
+            error: error instanceof Error ? error : "Unknown error",
+        } );
+
+        // next(error);
+    }
+};
