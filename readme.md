@@ -64,7 +64,7 @@ src/
 ### Installation
 
 ```bash
-git clone https://github.com/yourusername/librarynext.git
+git clone https://github.com/sumu9897/LibraryNext.git
 cd librarynext
 npm install
 ```

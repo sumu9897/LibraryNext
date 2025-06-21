@@ -13,19 +13,20 @@ const booksSchema = new Schema<IBooks>( {
     author: {
         type: String,
         required: true,
-        max: [ 20, "Author -> {VALUE} should not longer than 20 character" ],
-        min: [ 1, "Author -> {VALUE} should not shorter than 1 character" ],
-    },
+        minlength: [1, "Author -> {VALUE} should not be shorter than 1 character"],
+        maxlength: [20, "Author -> {VALUE} should not be longer than 20 characters"],
+      },
 
-    genre: {
+      genre: {
         type: String,
         required: true,
         uppercase: true,
         enum: {
-            values: [ "FICTION", "NON_FICTION", "SCIENCE", "HISTORY", "BIOGRAPHY", "FANTASY" ],
-            message: "Genre -> {VALUE} is not supported, please use one of the following: FICTION, NON_FICTION, SCIENCE, HISTORY, BIOGRAPHY, FANTASY",
+          values: ["FICTION", "NON_FICTION", "SCIENCE", "HISTORY", "BIOGRAPHY", "FANTASY"],
+          message:
+            "Genre -> {VALUE} is not supported. Please use one of: FICTION, NON_FICTION, SCIENCE, HISTORY, BIOGRAPHY, FANTASY",
         },
-    },
+      },
 
     isbn: {
         type: String,
@@ -36,9 +37,9 @@ const booksSchema = new Schema<IBooks>( {
     description: {
         type: String,
         default: "No description provided",
-        max: [ 100, "Description -> {VALUE} should not longer than 100 character" ],
-        min: [ 8, "Description -> {VALUE} should not shorter than 1 character" ],
-    },
+        minlength: [10, "Description -> {VALUE} should not be shorter than 8 characters"],
+        maxlength: [120, "Description -> {VALUE} should not be longer than 100 characters"],
+      },
 
     copies: {
         type: Number,
@@ -58,28 +59,27 @@ const booksSchema = new Schema<IBooks>( {
 } );
 
 // static method for adjusting copies after borrowing
-booksSchema.static( "adjustCopiesAfterBorrow", async function ( bookId: string, quantity: number )
-{
-    const book = await Books.findById( bookId );
-    // console.log( "Adjusting copies for book:", bookId, "by quantity:", quantity, book );
+booksSchema.static(
+    "adjustCopiesAfterBorrow",
+    async function (bookId: string, quantity: number): Promise<boolean> {
+      const book = await this.findById(bookId);
+      if (!book) {
+        throw new Error("Book not found");
+      }
   
-    if ( !book ) throw new Error( 'Book not found' );
+      if (book.copies < quantity) {
+        throw new Error("Not enough copies available");
+      }
   
-    if ( book.copies < quantity && book.availability )
-    {
-        throw new Error( 'Not enough copies available' );
-    }
+      book.copies -= quantity;
   
-    book.copies -= quantity;
-  
-    if ( book.copies === 0 )
-    {
+      if (book.copies === 0) {
         book.availability = false;
-    }
+      }
   
-    await book.save();
-    return true
-} );
-
+      await book.save();
+      return true;
+    }
+  );
 
 export const Books = model<IBooks, IBookStaticMethod>( "Books", booksSchema );
