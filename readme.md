@@ -40,15 +40,7 @@ A robust, RESTful API for managing books and borrowing records in a library syst
 
 ## 📁 Folder Structure
 
-src/
-├── controllers/ # Route logic
-├── models/ # Mongoose schemas
-├── routes/ # API routes
-├── utils/ # Zod schema, helper functions
-├── middlewares/ # Error handling, custom middleware
-├── app.ts # Main express config
-├── server.ts # App entry point
-└── config/ # MongoDB connection
+pre> ``` src/ ├── controllers/ # Route logic ├── models/ # Mongoose schemas ├── routes/ # API routes ├── utils/ # Zod schema, helper functions ├── middlewares/ # Error handling, custom middleware ├── app.ts # Main express config ├── server.ts # App entry point └── config/ # MongoDB connection ``` </pre>
 
 ---
 
