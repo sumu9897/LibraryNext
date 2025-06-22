@@ -4,8 +4,11 @@
   "main": "src/server.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "rimraf dist && tsc",
-    "start": "node dist/server.js"
+    "build": "tsc",
+    "start": "nodemon dist/server.js",
+    "lint": "npx eslint .",
+    "lint:fix": "npx eslint . --fix"
+
   },
   "keywords": [],
   "author": "",
