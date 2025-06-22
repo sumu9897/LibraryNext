@@ -127,40 +127,40 @@ export const getBookById = async (req: Request, res: Response): Promise<void> =>
 
 // Update book by ID
 export const updateBook = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const bookId = req.params.id;
-
-    if (!mongoose.Types.ObjectId.isValid(bookId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Invalid book ID format',
-        error: { name: 'CastError', value: bookId },
+    try {
+      const bookId = req.params.id;
+  
+      if (!mongoose.Types.ObjectId.isValid(bookId)) {
+        res.status(400).json({
+          success: false,
+          message: 'Invalid book ID format',
+          error: { name: 'CastError', value: bookId },
+        });
+        return;
+      }
+  
+      const validatedData = await zodBookSchema.parseAsync(req.body);
+  
+      const updatedBook = await Books.findByIdAndUpdate(bookId, validatedData, { new: true });
+  
+      if (!updatedBook) {
+        res.status(404).json({
+          success: false,
+          message: 'Book not found',
+          data: null,
+        });
+        return;
+      }
+  
+      res.status(200).json({
+        success: true,
+        message: 'Book updated successfully',
+        data: updatedBook,
       });
-      return;
+    } catch (error) {
+      handleServerError(res, error);
     }
-
-    const validatedData = await zodBookSchema.partial().parseAsync(req.body);
-
-    const updatedBook = await Books.findByIdAndUpdate(bookId, validatedData, { new: true });
-
-    if (!updatedBook) {
-      res.status(404).json({
-        success: false,
-        message: 'Book not found',
-        data: null,
-      });
-      return;
-    }
-
-    res.status(200).json({
-      success: true,
-      message: 'Book updated successfully',
-      data: updatedBook,
-    });
-  } catch (error) {
-    handleServerError(res, error);
-  }
-};
+  };
 
 // Delete book by ID
 export const deleteBook = async (req: Request, res: Response): Promise<void> => {

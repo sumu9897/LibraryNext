@@ -2,44 +2,34 @@ import { z } from 'zod';
 
 export const zodBookSchema = z.object({
   title: z
-    .string({
-      required_error: 'Title is required',
-    })
+    .string({ required_error: 'Title is required' })
     .min(1, 'Title cannot be empty'),
 
   author: z
-    .string({
-      required_error: 'Author is required',
-    })
+    .string({ required_error: 'Author is required' })
     .min(1, 'Author cannot be empty'),
 
   genre: z.enum(['FICTION', 'NON_FICTION', 'SCIENCE', 'HISTORY', 'BIOGRAPHY', 'FANTASY'], {
     required_error: 'Genre is required',
-    invalid_type_error: 'Genre must be one of FICTION, NON_FICTION, SCIENCE, HISTORY, BIOGRAPHY, FANTASY',
   }),
 
   isbn: z
-    .string({
-      required_error: 'ISBN is required',
-    })
+    .string({ required_error: 'ISBN is required' })
     .min(10, 'ISBN must be at least 10 characters'),
 
-  description: z
-    .string()
-    .optional(),
+  description: z.string().optional(),
 
   copies: z
-    .number({
-      required_error: 'Copies is required',
-      invalid_type_error: 'Copies must be a number',
-    })
+    .number({ required_error: 'Copies is required' })
     .int('Copies must be an integer')
     .min(0, 'Copies must be a positive number'),
 
-  available: z
-    .boolean()
-    .optional(),
+  available: z.boolean().optional(),
 });
+
+// ✅ Export a separate partial schema for PATCH/PUT
+export const zodPartialBookSchema = zodBookSchema.partial();
+
 
 export const zodBorrowSchema = z.object( {
     book: z.string().min( 1, "Book ID is required" ),
