@@ -6,9 +6,9 @@ A robust, RESTful API for managing books and borrowing records in a library syst
 
 👉 [Deployed API](https://library-nest.vercel.app/)
 
-## 📹 Video Overview
+<!-- ## 📹 Video Overview
 
-🎥 [Watch on YouTube](https://your-video-link.com)
+🎥 [Watch on YouTube](https://your-video-link.com) -->
 
 ---
 
